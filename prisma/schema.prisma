@@ -115,19 +115,20 @@ model Activity {
   NguoiDung   NguoiDung @relation(fields: [tai_khoan], references: [tai_khoan], onDelete: Cascade, name: "UserActivities")
 }
 
-enum Ghe_loai_ghe {
-  thuong
-  vip
+enum NguoiDung_loai_nguoi_dung {
+  khach_hang
+  quan_tri
 }
 
 enum DatVe_trang_thai {
-  da_thanh_toan
   cho_thanh_toan
+  da_thanh_toan
+  huy
 }
 
-enum NguoiDung_loai_nguoi_dung {
-  admin
-  khach_hang
+enum Ghe_loai_ghe {
+  thuong
+  vip
 }
 
 model Banner {
