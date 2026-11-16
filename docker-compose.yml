@@ -1,0 +1,36 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: movie-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: movie_dev_password
+      MYSQL_DATABASE: movie
+    ports:
+      - "3306:3306"
+    volumes:
+      - movie_mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-pmovie_dev_password"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: movie-api
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: mysql://root:movie_dev_password@db:3306/movie
+      PORT: 3000
+    ports:
+      - "3000:3000"
+    command: sh -c "npx prisma db push && npm run start:prod"
+
+volumes:
+  movie_mysql_data:
